@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Katt Development Premium</title>
+
+<style>
+
+* {
+  box-sizing: border-box;
+  font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  background: radial-gradient(circle at center, #14141c 0%, #050508 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+body::before {
+  content: "";
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: #6236ff;
+  filter: blur(180px);
+  opacity: 0.15;
+  z-index: 0;
+}
+
+.logo {
+  position: fixed;
+  top: 25px;
+  left: 25px;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 10;
+}
+
+.logo:hover {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.card {
+  position: relative;
+  z-index: 1;
+  background: rgba(22, 22, 30, 0.8);
+  backdrop-filter: blur(16px);
+  padding: 45px;
+  width: 440px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 30px;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #ffffff 0%, #b58cff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+input[type="text"],
+input[type="file"] {
+  width: 100%;
+  padding: 14px 18px;
+  margin-top: 15px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  outline: none;
+  background: rgba(10, 10, 15, 0.6);
+  color: white;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+input[type="text"]:focus {
+  border-color: #7d44ff;
+  background: rgba(20, 20, 30, 0.8);
+  box-shadow: 0 0 0 4px rgba(125, 68, 255, 0.2);
+}
+
+.example {
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: #7c7c94;
+  text-align: left;
+  padding-left: 4px;
+}
+
+button {
+  position: relative;
+  margin-top: 28px;
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 14px;
+  background: #4b1dc2; 
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transform: scale(1);
+  transition: 
+    transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), 
+    background 0.3s ease, 
+    box-shadow 0.4s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at var(--x, 50%) var(--y, 50%), 
+    rgba(255, 255, 255, 0.25) 0%, 
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+button:hover {
+  background: #5e2de3; 
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(94, 45, 227, 0.5);
+}
+
+button:hover::before {
+  opacity: 1;
+}
+
+button:disabled {
+  background: #333345 !important;
+  color: #888;
+  cursor: not-allowed;
+  transform: scale(1);
+}
+
+.thankyou {
+  font-size: 19px;
+  line-height: 1.6;
+  font-weight: 500;
+  color: #d1c4ff;
+}
+</style>
+</head>
+
+<body>
+
+<img 
+  src="https://i.imgur.com/FEcuPAK.png" 
+  class="logo" 
+  onclick="window.location.href='https://kattdevv.github.io/Katt-Dev/index.html'"
+  alt="Katt Logo"
+>
+
+<div class="card" id="card">
+  <h1>Katt Development Premium</h1>
+
+  <div id="form">
+    <input type="text" id="discord" placeholder="Your Discord username">
+    <div class="example">
+      Example : if your username is KattDev type @KattDev
+    </div>
+
+    <input type="text" id="roblox" placeholder="Your Roblox username">
+
+    <button onmousemove="handleHover(event)" onclick="purchase()">Purchase</button>
+  </div>
+</div>
+
+<script>
+/* Keep your scripts exactly as they were */
+function handleHover(e) {
+  const btn = e.currentTarget;
+  const rect = btn.getBoundingClientRect();
+  const x = ((e.clientX - rect.left) / rect.width) * 100;
+  const y = ((e.clientY - rect.top) / rect.height) * 100;
+  
+  btn.style.setProperty('--x', x + '%');
+  btn.style.setProperty('--y', y + '%');
+}
+
+let discordUser = "";
+let robloxUser = "";
+let submitting = false;
+
+function purchase() {
+  discordUser = document.getElementById("discord").value.trim();
+  robloxUser = document.getElementById("roblox").value.trim();
+
+  if (!discordUser || !robloxUser) {
+    alert("Please fill out both usernames.");
+    return;
+  }
+
+  window.open(
+    "https://www.roblox.com/game-pass/1703134351/Katt-Development-Premium",
+    "_blank"
+  );
+
+  const card = document.getElementById("card");
+  card.innerHTML = `
+    <h1>Katt Development Premium</h1>
+    <input type="file" id="proof" accept="image/*">
+    <button id="submitBtn" onmousemove="handleHover(event)" onclick="submitProof()">Submit Proof</button>
+  `;
+}
+
+async function submitProof() {
+  if (submitting) return;
+  submitting = true;
+
+  const btn = document.getElementById("submitBtn");
+  btn.disabled = true;
+  btn.innerText = "Submitting...";
+
+  const fileInput = document.getElementById("proof");
+  if (!fileInput.files.length) {
+    alert("Please upload an image.");
+    btn.disabled = false;
+    btn.innerText = "Submit Proof";
+    submitting = false;
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("discord", discordUser);
+  formData.append("roblox", robloxUser);
+  formData.append("proof", fileInput.files[0]);
+
+  const res = await fetch(
+    "https://katt-webhook-system.kattdevelopment.workers.dev",
+    {
+      method: "POST",
+      body: formData
+    }
+  );
+
+  if (!res.ok) {
+    alert("Something went wrong. Please try again.");
+    btn.disabled = false;
+    btn.innerText = "Submit Proof";
+    submitting = false;
+    return;
+  }
+
+  const card = document.getElementById("card");
+  card.innerHTML = `
+    <div class="thankyou">
+      Thank you for your purchase,<br>
+      please open a ticket in the Discord server
+    </div>
+  `;
+}
+</script>
+
+</body>
+</html>
