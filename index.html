@@ -138,12 +138,13 @@
             flex-shrink: 0;
         }
 
-        /* Inputs & Username Card specifics */
+        /* Input specific interactions */
         .roblox-input {
             width: 100%;
             padding: 15px;
             background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1); /* The effect on this */
+            transition: all 0.3s ease; /* Essential smoothness */
             border-radius: 12px;
             color: white;
             font-size: 16px;
@@ -151,6 +152,13 @@
             resize: none;
             margin-bottom: 20px;
             text-align: center;
+        }
+
+        .roblox-input:focus {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: #6236ff; /* Outline color change */
+            box-shadow: 0 0 20px rgba(98, 54, 255, 0.2); /* Neon glow */
+            transform: translateY(-2px); /* Lift effect */
         }
 
         .instr-img {
@@ -174,6 +182,7 @@
             gap: 15px;
         }
 
+        /* Main Button and Spotlight styling */
         button {
             position: relative;
             margin-top: 28px;
@@ -198,12 +207,14 @@
             background: transparent;
             border: 1px solid rgba(255, 255, 255, 0.2);
             margin-top: 0;
+            color: #d1c4ff;
         }
 
         button.solid-nav {
             margin-top: 0;
         }
 
+        /* SPOTLIGHT EFFECT restored */
         button::before {
             content: "";
             position: absolute;
@@ -220,7 +231,15 @@
             box-shadow: 0 8px 25px rgba(94, 45, 227, 0.5);
         }
 
+        button.hollow:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
         button:hover::before { opacity: 1; }
+
+        /* The Next button specifically will show hover text logic */
+        #nxt-txt { transition: color 0.3s ease; }
+        button.solid-nav:hover #nxt-txt { color: #ffffff; }
 
         .auth-desc {
             color: #d1c4ff;
@@ -296,15 +315,17 @@
             <h1>Roblox Username</h1>
             <input type="text" id="rbx-user" class="roblox-input" placeholder="Enter Username...">
             
-            <img src="https://i.imgur.com/3VlTj0H.png" class="instr-img" alt="Inventory Settings">
+            <img src="https://i.imgur.com/bumhtxU.png" class="instr-img" alt="Inventory Settings">
 
             <p class="info-text">
-                - Make sure to set Inventory Visibility in Roblox to <b>everyone</b> in settings <i data-lucide="arrow-right" style="width:14px; vertical-align:middle"></i> Privacy & Content Restrictions
+                - Make sure to set Inventory Visibility in Roblox to <b>everyone</b> in settings <i data-lucide="arrow-right" style="width:14px; vertical-align:middle; color:#a1a1aa;"></i> Privacy & Content Restrictions
             </p>
 
             <div class="btn-group">
-                <button class="hollow" onclick="showView('plans-container')"><i data-lucide="x"></i></button>
-                <button class="solid-nav" onclick="confirmVisibility()"><i data-lucide="arrow-right"></i></button>
+                <button class="hollow" onmousemove="handleHover(event)" onclick="showView('plans-container')">Close</button>
+                <button class="solid-nav" onmousemove="handleHover(event)" onclick="confirmVisibility()">
+                    <span id="nxt-txt">Next</span>
+                </button>
             </div>
         </div>
     </div>
@@ -327,7 +348,6 @@
 
         function initiatePurchase(url) {
             const newWindow = window.open(url, '_blank');
-            // Background behavior: try to focus the parent back immediately
             window.focus(); 
             showView('username-gate');
         }
@@ -338,10 +358,11 @@
             
             const check = confirm("Are you sure your inventory is visible?\n\nYou will not get premium unless it is before purchase.");
             if(check) {
-                // Future submission logic here
+                // Logic
             }
         }
 
+        // SPOTLIGHT logic
         function handleHover(e) {
             const btn = e.currentTarget;
             const rect = btn.getBoundingClientRect();
