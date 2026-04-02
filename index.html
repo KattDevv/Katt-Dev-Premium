@@ -434,13 +434,13 @@
 
                 const rbxUser = document.getElementById('rbx-user').value;
                 try {
-                    const response = await fetch(`https://katt-username-handler.kattdevelopment.workers.dev/check-purchase?username=${rbxUser}&passId=${selectedPassId}&discordId=${discordId}&rank=${selectedRank}`);
+                    const response = await fetch(`https://katt-username-handler.kattdevelopment.workers.dev/check-purchase?username=${encodeURIComponent(rbxUser)}&passId=${selectedPassId}&discordId=${discordId}&rank=${encodeURIComponent(selectedRank)}`);
                     const data = await response.json();
 
-                    if (data.error === "ALREADY_OWNED") {
+                    if (data.error === "Roblox user not found") {
                         clearInterval(pollTimer);
-                        showView('plans-container');
-                        showPopup('info', 'Hold on!', data.message);
+                        showView('username-gate');
+                        showPopup('info', 'User Not Found', 'We could not find a Roblox account with that name. Please check the spelling.');
                         return;
                     }
 
@@ -451,7 +451,7 @@
                 } catch (e) {
                     console.error("Poll error", e);
                 }
-            }, 1000);
+            }, 2000);
         }
 
         function triggerSuccess() {
@@ -520,7 +520,7 @@
         function triggerConfirm() {
             const user = document.getElementById('rbx-user').value;
             if(!user) return showPopup('info', 'Wait!', 'Please enter your username first.');
-            showPopup('warning', 'Are you sure your inventory is visible?', '<b>You will not get premium</b> unless it is set to everyone before purchase.', true);
+            showPopup('warning', 'Confirm Inventory Visibility', 'Premium status cannot be verified if your inventory is set to private. Is it set to "Everyone"?', true);
         }
 
         lucide.createIcons();
