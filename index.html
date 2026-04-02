@@ -3,6 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Katt Development Premium</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         * {
@@ -62,20 +63,16 @@
             text-align: center;
         }
 
-        #auth-gate {
-            display: flex;
+        #auth-gate, #plans-container, #username-gate {
+            display: none;
             flex-direction: column;
             align-items: center;
             z-index: 1;
-        }
-
-        #plans-container {
-            display: none; 
-            flex-direction: column;
-            align-items: center;
-            gap: 40px;
             width: 100%;
         }
+
+        /* Initial state logic */
+        #auth-gate { display: flex; }
 
         .container {
             display: flex;
@@ -130,21 +127,55 @@
             line-height: 1.4;
         }
 
-        .perk-item:last-child {
-            border-bottom: none;
-        }
-
         .perk-item::before {
             content: "✦";
             margin-right: 12px;
             color: #7d44ff;
             font-size: 12px;
-            flex-shrink: 0;
+        }
+
+        /* Inputs */
+        .roblox-input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            resize: none; /* Non-resizable */
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .roblox-input:focus {
+            border-color: #6236ff;
+        }
+
+        .instr-img {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .info-text {
+            font-size: 12px;
+            color: #a1a1aa;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            width: 100%;
         }
 
         button {
             position: relative;
-            margin-top: 28px;
             width: 100%;
             padding: 18px;
             border: none;
@@ -154,36 +185,24 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease, box-shadow 0.4s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        button::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(
-                circle at var(--x, 50%) var(--y, 50%), 
-                rgba(255, 255, 255, 0.25) 0%, 
-                transparent 50%
-            );
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
+        button.hollow {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         button:hover {
             background: #5e2de3; 
-            transform: scale(1.05);
-            box-shadow: 0 8px 25px rgba(94, 45, 227, 0.5);
+            transform: translateY(-2px);
         }
 
-        button:hover::before {
-            opacity: 1;
+        button.hollow:hover {
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .auth-desc {
@@ -205,13 +224,12 @@
                 <h1>Verify Identity</h1>
                 <p class="auth-desc">You must verify your Discord account to access the Premium Plan selection.</p>
             </div>
-            <button onmousemove="handleHover(event)" onclick="window.location.href='https://katt-username-handler.kattdevelopment.workers.dev/login'">Verify with Discord</button>
+            <button onclick="window.location.href='https://katt-username-handler.kattdevelopment.workers.dev/login'">Verify with Discord</button>
         </div>
     </div>
 
     <div id="plans-container">
         <h1 class="main-title">Premium Plans</h1>
-
         <div class="container">
             <div class="card">
                 <div>
@@ -219,38 +237,54 @@
                     <ul class="perks-list">
                         <li class="perk-item">Custom Script 50% Off</li>
                         <li class="perk-item">Premium Basic Server Role</li>
-                        <li class="perk-item">Double Giveaway Joins</li>
                     </ul>
                 </div>
-                <button onmousemove="handleHover(event)" onclick="window.open('https://www.roblox.com/game-pass/1779373176/Premium-Basic', '_blank')">Purchase</button>
+                <button onclick="handlePurchase('https://www.roblox.com/game-pass/1779373176/Premium-Basic')">Purchase</button>
             </div>
 
             <div class="card">
                 <div>
                     <h1>Premium Plus</h1>
                     <ul class="perks-list">
-                        <li class="perk-item">One-Time Free Custom Script & 50% Off</li>
+                        <li class="perk-item">One-Time Free Custom Script</li>
                         <li class="perk-item">Premium Plus Server Role</li>
-                        <li class="perk-item">Premium Plus Exclusive Scripts</li>
-                        <li class="perk-item">Triple Giveaway Joins</li>
-                        <li class="perk-item">Free 30 Day Key Voucher</li>
                     </ul>
                 </div>
-                <button onmousemove="handleHover(event)" onclick="window.open('https://www.roblox.com/game-pass/1703134351/Premium-Plus', '_blank')">Purchase</button>
+                <button onclick="handlePurchase('https://www.roblox.com/game-pass/1703134351/Premium-Plus')">Purchase</button>
             </div>
 
             <div class="card">
                 <div>
                     <h1>Premium Ultimate</h1>
                     <ul class="perks-list">
-                        <li class="perk-item">Free Custom Script Each Month & 70% Off</li>
-                        <li class="perk-item">Premium Ultimate Server Role</li>
-                        <li class="perk-item">Plus & Ultimate Exclusive Scripts</li>
-                        <li class="perk-item">Five Extra Giveaway Joins</li>
+                        <li class="perk-item">Free Custom Script Each Month</li>
                         <li class="perk-item">Lifetime Key</li>
                     </ul>
                 </div>
-                <button onmousemove="handleHover(event)" onclick="window.open('https://www.roblox.com/game-pass/1703134351/Premium-Plus', '_blank')">Purchase</button>
+                <button onclick="handlePurchase('https://www.roblox.com/game-pass/1703134351/Premium-Plus')">Purchase</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="username-gate">
+        <h1 class="main-title" style="margin-bottom: 40px;">Final Step</h1>
+        <div class="card" style="height: auto; min-height: unset; width: 420px; padding: 35px;">
+            <h1>Roblox Username</h1>
+            <input type="text" class="roblox-input" placeholder="Enter Username..." id="rob-user">
+            
+            <img src="https://i.imgur.com/3VlTj0H.png" class="instr-img" alt="Instructions">
+
+            <p class="info-text">
+                - Make sure to set Inventory Visibility in Roblox to <b>everyone</b> in settings <i data-lucide="arrow-right" style="width:12px; vertical-align:middle"></i> Privacy & Content Restrictions
+            </p>
+
+            <div class="btn-group">
+                <button class="hollow" onclick="goBackToPlans()">
+                    <i data-lucide="x"></i>
+                </button>
+                <button onclick="checkInventory()">
+                    <i data-lucide="arrow-right"></i>
+                </button>
             </div>
         </div>
     </div>
@@ -260,19 +294,40 @@
         const username = urlParams.get('username');
 
         if (username) {
+            showSection('plans-container');
+        }
+
+        function showSection(id) {
             document.getElementById('auth-gate').style.display = 'none';
-            document.getElementById('plans-container').style.display = 'flex';
+            document.getElementById('plans-container').style.display = 'none';
+            document.getElementById('username-gate').style.display = 'none';
+            document.getElementById(id).style.display = 'flex';
+            lucide.createIcons();
         }
 
-        function handleHover(e) {
-            const btn = e.currentTarget;
-            const rect = btn.getBoundingClientRect();
-            const x = ((e.clientX - rect.left) / rect.width) * 100;
-            const y = ((e.clientY - rect.top) / rect.height) * 100;
-            btn.style.setProperty('--x', x + '%');
-            btn.style.setProperty('--y', y + '%');
+        function handlePurchase(url) {
+            // Open in new background tab (Standard behavior)
+            window.open(url, '_blank');
+            // Switch current view to Username input
+            showSection('username-gate');
         }
+
+        function goBackToPlans() {
+            showSection('plans-container');
+        }
+
+        function checkInventory() {
+            const user = document.getElementById('rob-user').value;
+            if(!user) return alert("Please enter a username");
+            
+            const confirmed = confirm("Are you sure your inventory is visible?\n\nYou will not get premium unless it is before purchase.");
+            if (confirmed) {
+                // Logic for submission would go here
+                alert("Processing verification for: " + user);
+            }
+        }
+
+        lucide.createIcons();
     </script>
-
 </body>
 </html>
