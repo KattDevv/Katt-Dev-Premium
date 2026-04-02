@@ -184,7 +184,7 @@
             font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease, box-shadow 0.4s ease;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease, box-shadow 0.4s ease, border-color 0.3s ease;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             overflow: hidden;
             display: flex;
@@ -195,8 +195,8 @@
 
         button.hollow {
             background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #d1c4ff;
+            border: 2px solid #4b1dc2;
+            color: #ffffff;
         }
 
         button::before {
@@ -211,8 +211,13 @@
 
         button:hover {
             background: #5e2de3; 
-            transform: scale(1.05);
-            box-shadow: 0 8px 25px rgba(94, 45, 227, 0.5);
+            transform: scale(1.06);
+            box-shadow: 0 10px 30px rgba(94, 45, 227, 0.5);
+        }
+
+        button.hollow:hover {
+            background: rgba(75, 29, 194, 0.15);
+            border-color: #5e2de3;
         }
 
         button:hover::before { opacity: 1; }
@@ -462,8 +467,11 @@
         function handleHover(e) {
             const btn = e.currentTarget;
             const rect = btn.getBoundingClientRect();
-            btn.style.setProperty('--x', ((e.clientX - rect.left) / rect.width) * 100 + '%');
-            btn.style.setProperty('--y', ((e.clientY - rect.top) / rect.height) * 100 + '%');
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            
+            btn.style.setProperty('--x', x + '%');
+            btn.style.setProperty('--y', y + '%');
         }
 
         const modal = document.getElementById('custom-modal');
