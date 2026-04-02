@@ -4,6 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Katt Development Premium</title>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
         * {
@@ -63,7 +64,6 @@
             text-align: center;
         }
 
-        /* Re-added Gradient to Roblox Username Title */
         .gradient-title {
             background: linear-gradient(135deg, #ffffff 0%, #b58cff 100%);
             -webkit-background-clip: text;
@@ -71,7 +71,7 @@
             display: inline-block;
         }
 
-        #auth-gate, #plans-container, #username-gate {
+        #auth-gate, #plans-container, #username-gate, #processing-gate, #failed-gate, #success-gate {
             display: none;
             flex-direction: column;
             align-items: center;
@@ -141,9 +141,8 @@
             color: white;
             font-size: 16px;
             outline: none;
-            resize: none;
-            margin-bottom: 20px;
             text-align: center;
+            margin-bottom: 20px;
         }
 
         .roblox-input:focus {
@@ -218,7 +217,16 @@
 
         button:hover::before { opacity: 1; }
 
-        /* Built-in Popup Styles */
+        .spin {
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Modal Styles */
         #custom-modal {
             display: none;
             position: fixed;
@@ -295,7 +303,7 @@
                         <li class="perk-item">Double Giveaway Joins</li>
                     </ul>
                 </div>
-                <button onmousemove="handleHover(event)" style="margin-top:28px" onclick="initiatePurchase('https://www.roblox.com/game-pass/1779373176/Premium-Basic')">Purchase</button>
+                <button onmousemove="handleHover(event)" style="margin-top:28px" onclick="initiatePurchase('Premium Basic', '1779373176')">Purchase</button>
             </div>
 
             <div class="card">
@@ -308,7 +316,7 @@
                         <li class="perk-item">Triple Giveaway Joins</li>
                     </ul>
                 </div>
-                <button onmousemove="handleHover(event)" style="margin-top:28px" onclick="initiatePurchase('https://www.roblox.com/game-pass/1703134351/Premium-Plus')">Purchase</button>
+                <button onmousemove="handleHover(event)" style="margin-top:28px" onclick="initiatePurchase('Premium Plus', '1703134351')">Purchase</button>
             </div>
 
             <div class="card">
@@ -316,11 +324,14 @@
                     <h1>Premium Ultimate</h1>
                     <ul class="perks-list">
                         <li class="perk-item">Free Custom Script Each Month</li>
+                        <li class="perk-item">70% Off Future Custom Scripts</li>
                         <li class="perk-item">Premium Ultimate Server Role</li>
-                        <li class="perk-item">Lifetime Key</li>
+                        <li class="perk-item">Ultimate & Plus Exclusive Scripts</li>
+                        <li class="perk-item">Five Extra Giveaway Joins</li>
+                        <li class="perk-item">Lifetime Hub Key</li>
                     </ul>
                 </div>
-                <button onmousemove="handleHover(event)" style="margin-top:28px" onclick="initiatePurchase('https://www.roblox.com/game-pass/1703134351/Premium-Plus')">Purchase</button>
+                <button onmousemove="handleHover(event)" style="margin-top:28px" onclick="initiatePurchase('Premium Ultimate', '1749877840')">Purchase</button>
             </div>
         </div>
     </div>
@@ -345,6 +356,33 @@
         </div>
     </div>
 
+    <div id="processing-gate">
+        <div class="card" style="height: auto; min-height: 300px; width: 400px; justify-content: center;">
+            <i data-lucide="loader-2" class="spin" style="width: 50px; height: 50px; color: #6236ff; margin: 0 auto 20px;"></i>
+            <h1 class="gradient-title">Processing Purchase...</h1>
+            <p style="color: #d1c4ff;">Checking your inventory for the gamepass. Do not close this page.</p>
+        </div>
+    </div>
+
+    <div id="failed-gate">
+        <div class="card" style="height: auto; min-height: 300px; width: 400px; justify-content: center;">
+            <i data-lucide="x-circle" style="width: 50px; height: 50px; color: #ff4b4b; margin: 0 auto 20px;"></i>
+            <h1 style="color: #ff4b4b;">Process Failed :(</h1>
+            <p style="color: #d1c4ff; margin-bottom: 30px;">We couldn't find the gamepass in your inventory. Make sure it's public!</p>
+            <button onmousemove="handleHover(event)" onclick="startPolling()">
+                <i data-lucide="refresh-cw"></i> Restart
+            </button>
+        </div>
+    </div>
+
+    <div id="success-gate">
+        <div class="card" style="height: auto; min-height: 300px; width: 450px; justify-content: center;">
+            <i data-lucide="check-circle" style="width: 50px; height: 50px; color: #00ffa3; margin: 0 auto 20px;"></i>
+            <h1 class="gradient-title">Purchase Complete!</h1>
+            <p id="success-message" style="color: #d1c4ff; line-height: 1.6;"></p>
+        </div>
+    </div>
+
     <div id="custom-modal">
         <div class="modal-card" id="modal-content">
             <h2 id="modal-title">Attention</h2>
@@ -355,18 +393,70 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('username')) showView('plans-container');
+        const discordUser = urlParams.get('username');
+        let selectedRank = "";
+        let selectedPassId = "";
+        let pollTimer = null;
+        let secondsElapsed = 0;
+
+        if (discordUser) showView('plans-container');
 
         function showView(id) {
-            ['auth-gate', 'plans-container', 'username-gate'].forEach(v => document.getElementById(v).style.display = 'none');
+            ['auth-gate', 'plans-container', 'username-gate', 'processing-gate', 'failed-gate', 'success-gate'].forEach(v => {
+                document.getElementById(v).style.display = 'none';
+            });
             document.getElementById(id).style.display = 'flex';
             lucide.createIcons();
         }
 
-        function initiatePurchase(url) {
+        function initiatePurchase(rank, passId) {
+            selectedRank = rank;
+            selectedPassId = passId;
+            const url = `https://www.roblox.com/game-pass/${passId}/Redirect`;
             window.open(url, '_blank');
-            window.focus();
             showView('username-gate');
+        }
+
+        async function startPolling() {
+            showView('processing-gate');
+            secondsElapsed = 0;
+            
+            if (pollTimer) clearInterval(pollTimer);
+            
+            pollTimer = setInterval(async () => {
+                secondsElapsed++;
+                
+                if (secondsElapsed >= 60) {
+                    clearInterval(pollTimer);
+                    showView('failed-gate');
+                    return;
+                }
+
+                const rbxUser = document.getElementById('rbx-user').value;
+                try {
+                    const response = await fetch(`https://katt-username-handler.kattdevelopment.workers.dev/check-purchase?username=${rbxUser}&passId=${selectedPassId}&discordName=${discordUser}&rank=${selectedRank}`);
+                    const data = await response.json();
+
+                    if (data.owned) {
+                        clearInterval(pollTimer);
+                        triggerSuccess();
+                    }
+                } catch (e) {
+                    console.error("Poll error", e);
+                }
+            }, 1000);
+        }
+
+        function triggerSuccess() {
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#6236ff', '#b58cff', '#ffffff']
+            });
+
+            document.getElementById('success-message').innerText = `Your purchase of ${selectedRank} has been completed. You will get every perk approximately in the period of 24 hours.`;
+            showView('success-gate');
         }
 
         function handleHover(e) {
@@ -380,9 +470,7 @@
 
         function closeModal() {
             modal.classList.remove('active');
-            setTimeout(() => {
-                modal.style.display = 'none';
-            }, 400);
+            setTimeout(() => { modal.style.display = 'none'; }, 400);
         }
 
         function showPopup(type, title, msg, isConfirm = false) {
@@ -390,7 +478,6 @@
             content.className = `modal-card ${type}`;
             document.getElementById('modal-title').innerText = title;
             document.getElementById('modal-msg').innerHTML = msg;
-            
             const btnContainer = document.getElementById('modal-btns');
             btnContainer.innerHTML = '';
 
@@ -398,14 +485,13 @@
                 const cancelBtn = document.createElement('button');
                 cancelBtn.className = 'hollow';
                 cancelBtn.innerHTML = '<i data-lucide="x-circle"></i> No, Wait';
-                // Added spotlight listener to dynamic buttons
                 cancelBtn.onmousemove = handleHover;
                 cancelBtn.onclick = closeModal;
                 
                 const okBtn = document.createElement('button');
                 okBtn.innerHTML = '<i data-lucide="check-circle"></i> Yes, it is visible';
                 okBtn.onmousemove = handleHover;
-                okBtn.onclick = () => { closeModal(); };
+                okBtn.onclick = () => { closeModal(); startPolling(); };
                 
                 btnContainer.appendChild(cancelBtn);
                 btnContainer.appendChild(okBtn);
@@ -418,7 +504,6 @@
             }
 
             modal.style.display = 'flex';
-            // Small delay to trigger animation
             setTimeout(() => {
                 modal.classList.add('active');
                 lucide.createIcons();
