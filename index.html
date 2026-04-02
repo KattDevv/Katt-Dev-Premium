@@ -67,11 +67,10 @@
             display: none;
             flex-direction: column;
             align-items: center;
-            z-index: 1;
             width: 100%;
         }
 
-        /* Initial state logic */
+        /* Initial View */
         #auth-gate { display: flex; }
 
         .container {
@@ -127,14 +126,19 @@
             line-height: 1.4;
         }
 
+        .perk-item:last-child {
+            border-bottom: none;
+        }
+
         .perk-item::before {
             content: "✦";
             margin-right: 12px;
             color: #7d44ff;
             font-size: 12px;
+            flex-shrink: 0;
         }
 
-        /* Inputs */
+        /* Inputs & Username Card specifics */
         .roblox-input {
             width: 100%;
             padding: 15px;
@@ -144,38 +148,35 @@
             color: white;
             font-size: 16px;
             outline: none;
-            resize: none; /* Non-resizable */
+            resize: none;
             margin-bottom: 20px;
             text-align: center;
-        }
-
-        .roblox-input:focus {
-            border-color: #6236ff;
         }
 
         .instr-img {
             width: 100%;
             border-radius: 12px;
             margin-bottom: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .info-text {
-            font-size: 12px;
+            font-size: 13px;
             color: #a1a1aa;
-            line-height: 1.5;
-            margin-bottom: 25px;
             text-align: left;
+            margin-bottom: 25px;
+            line-height: 1.4;
         }
 
         .btn-group {
             display: flex;
-            gap: 15px;
+            justify-content: space-between;
             width: 100%;
+            gap: 15px;
         }
 
         button {
             position: relative;
+            margin-top: 28px;
             width: 100%;
             padding: 18px;
             border: none;
@@ -185,7 +186,9 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease, box-shadow 0.4s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -193,17 +196,31 @@
 
         button.hollow {
             background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-top: 0;
+        }
+
+        button.solid-nav {
+            margin-top: 0;
+        }
+
+        button::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255, 255, 255, 0.25) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
         }
 
         button:hover {
             background: #5e2de3; 
-            transform: translateY(-2px);
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(94, 45, 227, 0.5);
         }
 
-        button.hollow:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
+        button:hover::before { opacity: 1; }
 
         .auth-desc {
             color: #d1c4ff;
@@ -224,7 +241,7 @@
                 <h1>Verify Identity</h1>
                 <p class="auth-desc">You must verify your Discord account to access the Premium Plan selection.</p>
             </div>
-            <button onclick="window.location.href='https://katt-username-handler.kattdevelopment.workers.dev/login'">Verify with Discord</button>
+            <button onmousemove="handleHover(event)" onclick="window.location.href='https://katt-username-handler.kattdevelopment.workers.dev/login'">Verify with Discord</button>
         </div>
     </div>
 
@@ -237,54 +254,57 @@
                     <ul class="perks-list">
                         <li class="perk-item">Custom Script 50% Off</li>
                         <li class="perk-item">Premium Basic Server Role</li>
+                        <li class="perk-item">Double Giveaway Joins</li>
                     </ul>
                 </div>
-                <button onclick="handlePurchase('https://www.roblox.com/game-pass/1779373176/Premium-Basic')">Purchase</button>
+                <button onmousemove="handleHover(event)" onclick="initiatePurchase('https://www.roblox.com/game-pass/1779373176/Premium-Basic')">Purchase</button>
             </div>
 
             <div class="card">
                 <div>
                     <h1>Premium Plus</h1>
                     <ul class="perks-list">
-                        <li class="perk-item">One-Time Free Custom Script</li>
+                        <li class="perk-item">One-Time Free Custom Script & 50% Off</li>
                         <li class="perk-item">Premium Plus Server Role</li>
+                        <li class="perk-item">Premium Plus Exclusive Scripts</li>
+                        <li class="perk-item">Triple Giveaway Joins</li>
+                        <li class="perk-item">Free 30 Day Key Voucher</li>
                     </ul>
                 </div>
-                <button onclick="handlePurchase('https://www.roblox.com/game-pass/1703134351/Premium-Plus')">Purchase</button>
+                <button onmousemove="handleHover(event)" onclick="initiatePurchase('https://www.roblox.com/game-pass/1703134351/Premium-Plus')">Purchase</button>
             </div>
 
             <div class="card">
                 <div>
                     <h1>Premium Ultimate</h1>
                     <ul class="perks-list">
-                        <li class="perk-item">Free Custom Script Each Month</li>
+                        <li class="perk-item">Free Custom Script Each Month & 70% Off</li>
+                        <li class="perk-item">Premium Ultimate Server Role</li>
+                        <li class="perk-item">Plus & Ultimate Exclusive Scripts</li>
+                        <li class="perk-item">Five Extra Giveaway Joins</li>
                         <li class="perk-item">Lifetime Key</li>
                     </ul>
                 </div>
-                <button onclick="handlePurchase('https://www.roblox.com/game-pass/1703134351/Premium-Plus')">Purchase</button>
+                <button onmousemove="handleHover(event)" onclick="initiatePurchase('https://www.roblox.com/game-pass/1703134351/Premium-Plus')">Purchase</button>
             </div>
         </div>
     </div>
 
     <div id="username-gate">
         <h1 class="main-title" style="margin-bottom: 40px;">Final Step</h1>
-        <div class="card" style="height: auto; min-height: unset; width: 420px; padding: 35px;">
+        <div class="card" style="height: auto; min-height: unset; width: 440px; padding: 40px;">
             <h1>Roblox Username</h1>
-            <input type="text" class="roblox-input" placeholder="Enter Username..." id="rob-user">
+            <input type="text" id="rbx-user" class="roblox-input" placeholder="Enter Username...">
             
-            <img src="https://i.imgur.com/3VlTj0H.png" class="instr-img" alt="Instructions">
+            <img src="https://i.imgur.com/3VlTj0H.png" class="instr-img" alt="Inventory Settings">
 
             <p class="info-text">
-                - Make sure to set Inventory Visibility in Roblox to <b>everyone</b> in settings <i data-lucide="arrow-right" style="width:12px; vertical-align:middle"></i> Privacy & Content Restrictions
+                - Make sure to set Inventory Visibility in Roblox to <b>everyone</b> in settings <i data-lucide="arrow-right" style="width:14px; vertical-align:middle"></i> Privacy & Content Restrictions
             </p>
 
             <div class="btn-group">
-                <button class="hollow" onclick="goBackToPlans()">
-                    <i data-lucide="x"></i>
-                </button>
-                <button onclick="checkInventory()">
-                    <i data-lucide="arrow-right"></i>
-                </button>
+                <button class="hollow" onclick="showView('plans-container')"><i data-lucide="x"></i></button>
+                <button class="solid-nav" onclick="confirmVisibility()"><i data-lucide="arrow-right"></i></button>
             </div>
         </div>
     </div>
@@ -294,10 +314,10 @@
         const username = urlParams.get('username');
 
         if (username) {
-            showSection('plans-container');
+            showView('plans-container');
         }
 
-        function showSection(id) {
+        function showView(id) {
             document.getElementById('auth-gate').style.display = 'none';
             document.getElementById('plans-container').style.display = 'none';
             document.getElementById('username-gate').style.display = 'none';
@@ -305,26 +325,30 @@
             lucide.createIcons();
         }
 
-        function handlePurchase(url) {
-            // Open in new background tab (Standard behavior)
-            window.open(url, '_blank');
-            // Switch current view to Username input
-            showSection('username-gate');
+        function initiatePurchase(url) {
+            const newWindow = window.open(url, '_blank');
+            // Background behavior: try to focus the parent back immediately
+            window.focus(); 
+            showView('username-gate');
         }
 
-        function goBackToPlans() {
-            showSection('plans-container');
-        }
-
-        function checkInventory() {
-            const user = document.getElementById('rob-user').value;
-            if(!user) return alert("Please enter a username");
+        function confirmVisibility() {
+            const userVal = document.getElementById('rbx-user').value;
+            if(!userVal) return alert("Please enter your Roblox username.");
             
-            const confirmed = confirm("Are you sure your inventory is visible?\n\nYou will not get premium unless it is before purchase.");
-            if (confirmed) {
-                // Logic for submission would go here
-                alert("Processing verification for: " + user);
+            const check = confirm("Are you sure your inventory is visible?\n\nYou will not get premium unless it is before purchase.");
+            if(check) {
+                // Future submission logic here
             }
+        }
+
+        function handleHover(e) {
+            const btn = e.currentTarget;
+            const rect = btn.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            btn.style.setProperty('--x', x + '%');
+            btn.style.setProperty('--y', y + '%');
         }
 
         lucide.createIcons();
