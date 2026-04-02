@@ -1,523 +1,529 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Katt Development Premium</title>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Katt Development Premium</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-    <style>
-        * {
-            box-sizing: border-box;
-            font-family: "Inter", "Segoe UI", Roboto, sans-serif;
-        }
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+        }
 
-        body {
-            margin: 0;
-            min-height: 100vh;
-            background: radial-gradient(circle at center, #14141c 0%, #050508 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #ffffff;
-            overflow-x: hidden;
-            gap: 40px;
-            padding: 60px 40px;
-        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: radial-gradient(circle at center, #14141c 0%, #050508 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            overflow-x: hidden;
+            gap: 40px;
+            padding: 60px 40px;
+        }
 
-        body::before {
-            content: "";
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: #6236ff;
-            filter: blur(180px);
-            opacity: 0.15;
-            z-index: 0;
-        }
+        body::before {
+            content: "";
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: #6236ff;
+            filter: blur(180px);
+            opacity: 0.15;
+            z-index: 0;
+        }
 
-        .logo {
-            position: fixed;
-            top: 25px;
-            left: 25px;
-            width: 50px;
-            height: 50px;
-            cursor: pointer;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 10;
-        }
+        .logo {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10;
+        }
 
-        .logo:hover {
-            transform: scale(1.1) rotate(5deg);
-        }
+        .logo:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
 
-        .main-title {
-            font-size: 48px;
-            font-weight: 800;
-            letter-spacing: -1.5px;
-            margin: 0;
-            z-index: 1;
-            background: linear-gradient(135deg, #ffffff 0%, #b58cff 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-align: center;
-        }
+        .main-title {
+            font-size: 48px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            margin: 0;
+            z-index: 1;
+            background: linear-gradient(135deg, #ffffff 0%, #b58cff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
 
-        .gradient-title {
-            background: linear-gradient(135deg, #ffffff 0%, #b58cff 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: inline-block;
-        }
+        .gradient-title {
+            background: linear-gradient(135deg, #ffffff 0%, #b58cff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
 
-        #auth-gate, #plans-container, #username-gate, #processing-gate, #failed-gate, #success-gate {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-        }
+        #auth-gate, #plans-container, #username-gate, #processing-gate, #failed-gate, #success-gate {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
 
-        #auth-gate { display: flex; }
+        #auth-gate { display: flex; }
 
-        .container {
-            display: flex;
-            gap: 30px;
-            justify-content: center;
-            align-items: stretch;
-            flex-wrap: wrap;
-            z-index: 1;
-        }
+        .container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: stretch;
+            flex-wrap: wrap;
+            z-index: 1;
+        }
 
-        .card {
-            position: relative;
-            background: rgba(22, 22, 30, 0.8);
-            backdrop-filter: blur(16px);
-            padding: 45px;
-            width: 440px;
-            min-height: 550px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-            text-align: center;
-        }
+        .card {
+            position: relative;
+            background: rgba(22, 22, 30, 0.8);
+            backdrop-filter: blur(16px);
+            padding: 45px;
+            width: 440px;
+            min-height: 550px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            text-align: center;
+        }
 
-        .perks-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            text-align: left;
-            flex-grow: 1;
-        }
+        .perks-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+            flex-grow: 1;
+        }
 
-        .perk-item {
-            padding: 12px 0;
-            font-size: 14.5px;
-            color: #d1c4ff;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            display: flex;
-            align-items: center;
-            line-height: 1.4;
-        }
+        .perk-item {
+            padding: 12px 0;
+            font-size: 14.5px;
+            color: #d1c4ff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            line-height: 1.4;
+        }
 
-        .perk-item::before {
-            content: "✦";
-            margin-right: 12px;
-            color: #7d44ff;
-            font-size: 12px;
-            flex-shrink: 0;
-        }
+        .perk-item::before {
+            content: "✦";
+            margin-right: 12px;
+            color: #7d44ff;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
 
-        .roblox-input {
-            width: 100%;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            border-radius: 12px;
-            color: white;
-            font-size: 16px;
-            outline: none;
-            text-align: center;
-            margin-bottom: 20px;
-        }
+        .roblox-input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-        .roblox-input:focus {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: #6236ff;
-            box-shadow: 0 0 20px rgba(98, 54, 255, 0.2);
-            transform: translateY(-2px);
-        }
+        .roblox-input:focus {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: #6236ff;
+            box-shadow: 0 0 20px rgba(98, 54, 255, 0.2);
+            transform: translateY(-2px);
+        }
 
-        .instr-img {
-            width: 100%;
-            border-radius: 12px;
-            margin-bottom: 15px;
-        }
+        .instr-img {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
 
-        .info-text {
-            font-size: 13px;
-            color: #a1a1aa;
-            text-align: left;
-            margin-bottom: 25px;
-            line-height: 1.4;
-        }
+        .info-text {
+            font-size: 13px;
+            color: #a1a1aa;
+            text-align: left;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
 
-        .btn-group {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            gap: 15px;
-        }
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            gap: 15px;
+        }
 
-        button {
-            position: relative;
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 14px;
-            background: #4b1dc2; 
-            color: #ffffff;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease, box-shadow 0.4s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
+        button {
+            position: relative;
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            background: #4b1dc2; 
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease, box-shadow 0.4s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
 
-        button.hollow {
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #d1c4ff;
-        }
+        button.hollow {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #d1c4ff;
+        }
 
-        button::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255, 255, 255, 0.25) 0%, transparent 50%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
+        button::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255, 255, 255, 0.25) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
 
-        button:hover {
-            background: #5e2de3; 
-            transform: scale(1.05);
-            box-shadow: 0 8px 25px rgba(94, 45, 227, 0.5);
-        }
+        button:hover {
+            background: #5e2de3; 
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(94, 45, 227, 0.5);
+        }
 
-        button:hover::before { opacity: 1; }
+        button:hover::before { opacity: 1; }
 
-        .spin {
-            animation: spin 2s linear infinite;
-        }
+        .spin {
+            animation: spin 2s linear infinite;
+        }
 
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
 
-        /* Modal Styles */
-        #custom-modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(12px);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
-        }
+        #custom-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
 
-        .modal-card {
-            width: 420px;
-            background: #16161e;
-            border: 1px solid #6236ff;
-            border-radius: 24px;
-            padding: 35px;
-            text-align: center;
-            box-shadow: 0 0 40px rgba(98, 54, 255, 0.4);
-            transform: scale(0.7);
-            opacity: 0;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
+        .modal-card {
+            width: 420px;
+            background: #16161e;
+            border: 1px solid #6236ff;
+            border-radius: 24px;
+            padding: 35px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(98, 54, 255, 0.4);
+            transform: scale(0.7);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
 
-        #custom-modal.active .modal-card {
-            transform: scale(1);
-            opacity: 1;
-        }
+        #custom-modal.active .modal-card {
+            transform: scale(1);
+            opacity: 1;
+        }
 
-        .modal-card h2 {
-            margin-top: 0;
-            font-size: 24px;
-            color: #ff4b4b;
-        }
+        .modal-card h2 {
+            margin-top: 0;
+            font-size: 24px;
+            color: #ff4b4b;
+        }
 
-        .modal-card.info h2 { color: #ffffff; }
+        .modal-card.info h2 { color: #ffffff; }
 
-        .modal-card p {
-            color: #d1c4ff;
-            font-size: 16px;
-            margin: 20px 0 30px 0;
-            line-height: 1.5;
-        }
-    </style>
+        .modal-card p {
+            color: #d1c4ff;
+            font-size: 16px;
+            margin: 20px 0 30px 0;
+            line-height: 1.5;
+        }
+    </style>
 </head>
 
 <body>
 
-    <img src="https://i.imgur.com/FEcuPAK_d.webp?maxwidth=760&fidelity=grand" class="logo" onclick="window.location.href='https://kattdevv.github.io/Katt-Dev/index.html'" alt="Katt Logo">
+    <img src="https://i.imgur.com/FEcuPAK_d.webp?maxwidth=760&fidelity=grand" class="logo" onclick="window.location.href='https://kattdevv.github.io/Katt-Dev/index.html'" alt="Katt Logo">
 
-    <div id="auth-gate">
-        <h1 class="main-title" style="margin-bottom: 40px;">Verification Required</h1>
-        <div class="card" style="height: auto; min-height: unset; width: 400px;">
-            <div>
-                <h1 style="margin-top:0">Verify Identity</h1>
-                <p style="color:#d1c4ff; margin-bottom:20px">You must verify your Discord account to access the Premium Plan selection.</p>
-            </div>
-            <button onmousemove="handleHover(event)" onclick="window.location.href='https://katt-username-handler.kattdevelopment.workers.dev/login'">
-                Verify with Discord
-            </button>
-        </div>
-    </div>
+    <div id="auth-gate">
+        <h1 class="main-title" style="margin-bottom: 40px;">Verification Required</h1>
+        <div class="card" style="height: auto; min-height: unset; width: 400px;">
+            <div>
+                <h1 style="margin-top:0">Verify Identity</h1>
+                <p style="color:#d1c4ff; margin-bottom:20px">You must verify your Discord account to access the Premium Plan selection.</p>
+            </div>
+            <button onmousemove="handleHover(event)" onclick="window.location.href='https://katt-username-handler.kattdevelopment.workers.dev/login'">
+                Verify with Discord
+            </button>
+        </div>
+    </div>
 
-    <div id="plans-container">
-        <h1 class="main-title">Premium Plans</h1>
-        <div class="container">
-            <div class="card">
-                <div>
-                    <h1>Premium Basic</h1>
-                    <ul class="perks-list">
-                        <li class="perk-item">Custom Script 50% Off</li>
-                        <li class="perk-item">Premium Basic Server Role</li>
-                        <li class="perk-item">Double Giveaway Joins</li>
-                    </ul>
-                </div>
-                <button onmousemove="handleHover(event)" style="margin-top:28px" onclick="initiatePurchase('Premium Basic', '1779373176')">Purchase</button>
-            </div>
+    <div id="plans-container">
+        <h1 class="main-title">Premium Plans</h1>
+        <div class="container">
+            <div class="card">
+                <div>
+                    <h1>Premium Basic</h1>
+                    <ul class="perks-list">
+                        <li class="perk-item">Custom Script 50% Off</li>
+                        <li class="perk-item">Premium Basic Server Role</li>
+                        <li class="perk-item">Double Giveaway Joins</li>
+                    </ul>
+                </div>
+                <button onmousemove="handleHover(event)" style="margin-top:28px" onclick="initiatePurchase('Premium Basic', '1779373176')">Purchase</button>
+            </div>
 
-            <div class="card">
-                <div>
-                    <h1>Premium Plus</h1>
-                    <ul class="perks-list">
-                        <li class="perk-item">One-Time Free Custom Script & 50% Off</li>
-                        <li class="perk-item">Premium Plus Server Role</li>
-                        <li class="perk-item">Premium Plus Exclusive Scripts</li>
-                        <li class="perk-item">Triple Giveaway Joins</li>
-                    </ul>
-                </div>
-                <button onmousemove="handleHover(event)" style="margin-top:28px" onclick="initiatePurchase('Premium Plus', '1703134351')">Purchase</button>
-            </div>
+            <div class="card">
+                <div>
+                    <h1>Premium Plus</h1>
+                    <ul class="perks-list">
+                        <li class="perk-item">One-Time Free Custom Script & 50% Off</li>
+                        <li class="perk-item">Premium Plus Server Role</li>
+                        <li class="perk-item">Premium Plus Exclusive Scripts</li>
+                        <li class="perk-item">Triple Giveaway Joins</li>
+                    </ul>
+                </div>
+                <button onmousemove="handleHover(event)" style="margin-top:28px" onclick="initiatePurchase('Premium Plus', '1703134351')">Purchase</button>
+            </div>
 
-            <div class="card">
-                <div>
-                    <h1>Premium Ultimate</h1>
-                    <ul class="perks-list">
-                        <li class="perk-item">Free Custom Script Each Month</li>
-                        <li class="perk-item">70% Off Future Custom Scripts</li>
-                        <li class="perk-item">Premium Ultimate Server Role</li>
-                        <li class="perk-item">Ultimate & Plus Exclusive Scripts</li>
-                        <li class="perk-item">Five Extra Giveaway Joins</li>
-                        <li class="perk-item">Lifetime Hub Key</li>
-                    </ul>
-                </div>
-                <button onmousemove="handleHover(event)" style="margin-top:28px" onclick="initiatePurchase('Premium Ultimate', '1749877840')">Purchase</button>
-            </div>
-        </div>
-    </div>
+            <div class="card">
+                <div>
+                    <h1>Premium Ultimate</h1>
+                    <ul class="perks-list">
+                        <li class="perk-item">Free Custom Script Each Month</li>
+                        <li class="perk-item">70% Off Future Custom Scripts</li>
+                        <li class="perk-item">Premium Ultimate Server Role</li>
+                        <li class="perk-item">Ultimate & Plus Exclusive Scripts</li>
+                        <li class="perk-item">Five Extra Giveaway Joins</li>
+                        <li class="perk-item">Lifetime Hub Key</li>
+                    </ul>
+                </div>
+                <button onmousemove="handleHover(event)" style="margin-top:28px" onclick="initiatePurchase('Premium Ultimate', '1749877840')">Purchase</button>
+            </div>
+        </div>
+    </div>
 
-    <div id="username-gate">
-        <h1 class="main-title" style="margin-bottom: 40px;">Final Step</h1>
-        <div class="card" style="height: auto; min-height: unset; width: 440px; padding: 40px;">
-            <h1 class="gradient-title">Roblox Username</h1>
-            <input type="text" id="rbx-user" class="roblox-input" placeholder="Enter Username...">
-            <img src="https://i.imgur.com/bumhtxU.png" class="instr-img">
-            <p class="info-text">
-                - Make sure to set Inventory Visibility in Roblox to <b>everyone</b> in settings <i data-lucide="arrow-right" style="width:14px; vertical-align:middle; color:#a1a1aa;"></i> Privacy & Content Restrictions
-            </p>
-            <div class="btn-group">
-                <button class="hollow" onmousemove="handleHover(event)" onclick="showView('plans-container')">
-                    <i data-lucide="x"></i> Close
-                </button>
-                <button onmousemove="handleHover(event)" onclick="triggerConfirm()">
-                    Next <i data-lucide="arrow-right"></i>
-                </button>
-            </div>
-        </div>
-    </div>
+    <div id="username-gate">
+        <h1 class="main-title" style="margin-bottom: 40px;">Final Step</h1>
+        <div class="card" style="height: auto; min-height: unset; width: 440px; padding: 40px;">
+            <h1 class="gradient-title">Roblox Username</h1>
+            <input type="text" id="rbx-user" class="roblox-input" placeholder="Enter Username...">
+            <img src="https://i.imgur.com/bumhtxU.png" class="instr-img">
+            <p class="info-text">
+                - Make sure to set Inventory Visibility in Roblox to <b>everyone</b> in settings <i data-lucide="arrow-right" style="width:14px; vertical-align:middle; color:#a1a1aa;"></i> Privacy & Content Restrictions
+            </p>
+            <div class="btn-group">
+                <button class="hollow" onmousemove="handleHover(event)" onclick="showView('plans-container')">
+                    <i data-lucide="x"></i> Close
+                </button>
+                <button onmousemove="handleHover(event)" onclick="triggerConfirm()">
+                    Next <i data-lucide="arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
 
-    <div id="processing-gate">
-        <div class="card" style="height: auto; min-height: 300px; width: 400px; justify-content: center;">
-            <i data-lucide="loader-2" class="spin" style="width: 50px; height: 50px; color: #6236ff; margin: 0 auto 20px;"></i>
-            <h1 class="gradient-title">Processing Purchase...</h1>
-            <p style="color: #d1c4ff;">Checking your inventory for the gamepass. Do not close this page.</p>
-        </div>
-    </div>
+    <div id="processing-gate">
+        <div class="card" style="height: auto; min-height: 300px; width: 400px; justify-content: center;">
+            <i data-lucide="loader-2" class="spin" style="width: 50px; height: 50px; color: #6236ff; margin: 0 auto 20px;"></i>
+            <h1 class="gradient-title">Processing Purchase...</h1>
+            <p style="color: #d1c4ff;">Checking your inventory for the gamepass. Do not close this page.</p>
+        </div>
+    </div>
 
-    <div id="failed-gate">
-        <div class="card" style="height: auto; min-height: 300px; width: 400px; justify-content: center;">
-            <i data-lucide="x-circle" style="width: 50px; height: 50px; color: #ff4b4b; margin: 0 auto 20px;"></i>
-            <h1 style="color: #ff4b4b;">Process Failed :(</h1>
-            <p style="color: #d1c4ff; margin-bottom: 30px;">We couldn't find the gamepass in your inventory. Make sure it's public!</p>
-            <button onmousemove="handleHover(event)" onclick="startPolling()">
-                <i data-lucide="refresh-cw"></i> Restart
-            </button>
-        </div>
-    </div>
+    <div id="failed-gate">
+        <div class="card" style="height: auto; min-height: 300px; width: 400px; justify-content: center;">
+            <i data-lucide="x-circle" style="width: 50px; height: 50px; color: #ff4b4b; margin: 0 auto 20px;"></i>
+            <h1 style="color: #ff4b4b;">Process Failed :(</h1>
+            <p style="color: #d1c4ff; margin-bottom: 30px;">We couldn't find the gamepass in your inventory. Make sure it's public!</p>
+            <button onmousemove="handleHover(event)" onclick="startPolling()">
+                <i data-lucide="refresh-cw"></i> Restart
+            </button>
+        </div>
+    </div>
 
-    <div id="success-gate">
-        <div class="card" style="height: auto; min-height: 300px; width: 450px; justify-content: center;">
-            <i data-lucide="check-circle" style="width: 50px; height: 50px; color: #00ffa3; margin: 0 auto 20px;"></i>
-            <h1 class="gradient-title">Purchase Complete!</h1>
-            <p id="success-message" style="color: #d1c4ff; line-height: 1.6;"></p>
-        </div>
-    </div>
+    <div id="success-gate">
+        <div class="card" style="height: auto; min-height: 300px; width: 450px; justify-content: center;">
+            <i data-lucide="check-circle" style="width: 50px; height: 50px; color: #00ffa3; margin: 0 auto 20px;"></i>
+            <h1 class="gradient-title">Purchase Complete!</h1>
+            <p id="success-message" style="color: #d1c4ff; line-height: 1.6;"></p>
+        </div>
+    </div>
 
-    <div id="custom-modal">
-        <div class="modal-card" id="modal-content">
-            <h2 id="modal-title">Attention</h2>
-            <p id="modal-msg"></p>
-            <div class="btn-group" id="modal-btns"></div>
-        </div>
-    </div>
+    <div id="custom-modal">
+        <div class="modal-card" id="modal-content">
+            <h2 id="modal-title">Attention</h2>
+            <p id="modal-msg"></p>
+            <div class="btn-group" id="modal-btns"></div>
+        </div>
+    </div>
 
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const discordUser = urlParams.get('username');
-        let selectedRank = "";
-        let selectedPassId = "";
-        let pollTimer = null;
-        let secondsElapsed = 0;
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const discordUser = urlParams.get('username');
+        const discordId = urlParams.get('id');
+        let selectedRank = "";
+        let selectedPassId = "";
+        let pollTimer = null;
+        let secondsElapsed = 0;
 
-        if (discordUser) showView('plans-container');
+        if (discordUser) showView('plans-container');
 
-        function showView(id) {
-            ['auth-gate', 'plans-container', 'username-gate', 'processing-gate', 'failed-gate', 'success-gate'].forEach(v => {
-                document.getElementById(v).style.display = 'none';
-            });
-            document.getElementById(id).style.display = 'flex';
-            lucide.createIcons();
-        }
+        function showView(id) {
+            ['auth-gate', 'plans-container', 'username-gate', 'processing-gate', 'failed-gate', 'success-gate'].forEach(v => {
+                document.getElementById(v).style.display = 'none';
+            });
+            document.getElementById(id).style.display = 'flex';
+            lucide.createIcons();
+        }
 
-        function initiatePurchase(rank, passId) {
-            selectedRank = rank;
-            selectedPassId = passId;
-            const url = `https://www.roblox.com/game-pass/${passId}/Redirect`;
-            window.open(url, '_blank');
-            showView('username-gate');
-        }
+        function initiatePurchase(rank, passId) {
+            selectedRank = rank;
+            selectedPassId = passId;
+            const url = `https://www.roblox.com/game-pass/${passId}/Redirect`;
+            window.open(url, '_blank');
+            showView('username-gate');
+        }
 
-        async function startPolling() {
-            showView('processing-gate');
-            secondsElapsed = 0;
-            
-            if (pollTimer) clearInterval(pollTimer);
-            
-            pollTimer = setInterval(async () => {
-                secondsElapsed++;
-                
-                if (secondsElapsed >= 60) {
-                    clearInterval(pollTimer);
-                    showView('failed-gate');
-                    return;
-                }
+        async function startPolling() {
+            showView('processing-gate');
+            secondsElapsed = 0;
+            
+            if (pollTimer) clearInterval(pollTimer);
+            
+            pollTimer = setInterval(async () => {
+                secondsElapsed++;
+                
+                if (secondsElapsed >= 60) {
+                    clearInterval(pollTimer);
+                    showView('failed-gate');
+                    return;
+                }
 
-                const rbxUser = document.getElementById('rbx-user').value;
-                try {
-                    const response = await fetch(`https://katt-username-handler.kattdevelopment.workers.dev/check-purchase?username=${rbxUser}&passId=${selectedPassId}&discordName=${discordUser}&rank=${selectedRank}`);
-                    const data = await response.json();
+                const rbxUser = document.getElementById('rbx-user').value;
+                try {
+                    const response = await fetch(`https://katt-username-handler.kattdevelopment.workers.dev/check-purchase?username=${rbxUser}&passId=${selectedPassId}&discordId=${discordId}&rank=${selectedRank}`);
+                    const data = await response.json();
 
-                    if (data.owned) {
-                        clearInterval(pollTimer);
-                        triggerSuccess();
-                    }
-                } catch (e) {
-                    console.error("Poll error", e);
-                }
-            }, 1000);
-        }
+                    if (data.error === "ALREADY_OWNED") {
+                        clearInterval(pollTimer);
+                        showView('plans-container');
+                        showPopup('info', 'Hold on!', data.message);
+                        return;
+                    }
 
-        function triggerSuccess() {
-            confetti({
-                particleCount: 150,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: ['#6236ff', '#b58cff', '#ffffff']
-            });
+                    if (data.owned) {
+                        clearInterval(pollTimer);
+                        triggerSuccess();
+                    }
+                } catch (e) {
+                    console.error("Poll error", e);
+                }
+            }, 1000);
+        }
 
-            document.getElementById('success-message').innerText = `Your purchase of ${selectedRank} has been completed. You will get every perk approximately in the period of 24 hours.`;
-            showView('success-gate');
-        }
+        function triggerSuccess() {
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#6236ff', '#b58cff', '#ffffff']
+            });
 
-        function handleHover(e) {
-            const btn = e.currentTarget;
-            const rect = btn.getBoundingClientRect();
-            btn.style.setProperty('--x', ((e.clientX - rect.left) / rect.width) * 100 + '%');
-            btn.style.setProperty('--y', ((e.clientY - rect.top) / rect.height) * 100 + '%');
-        }
+            document.getElementById('success-message').innerText = `Your purchase of ${selectedRank} has been completed. You will get every perk approximately in the period of 24 hours.`;
+            showView('success-gate');
+        }
 
-        const modal = document.getElementById('custom-modal');
+        function handleHover(e) {
+            const btn = e.currentTarget;
+            const rect = btn.getBoundingClientRect();
+            btn.style.setProperty('--x', ((e.clientX - rect.left) / rect.width) * 100 + '%');
+            btn.style.setProperty('--y', ((e.clientY - rect.top) / rect.height) * 100 + '%');
+        }
 
-        function closeModal() {
-            modal.classList.remove('active');
-            setTimeout(() => { modal.style.display = 'none'; }, 400);
-        }
+        const modal = document.getElementById('custom-modal');
 
-        function showPopup(type, title, msg, isConfirm = false) {
-            const content = document.getElementById('modal-content');
-            content.className = `modal-card ${type}`;
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-msg').innerHTML = msg;
-            const btnContainer = document.getElementById('modal-btns');
-            btnContainer.innerHTML = '';
+        function closeModal() {
+            modal.classList.remove('active');
+            setTimeout(() => { modal.style.display = 'none'; }, 400);
+        }
 
-            if(isConfirm) {
-                const cancelBtn = document.createElement('button');
-                cancelBtn.className = 'hollow';
-                cancelBtn.innerHTML = '<i data-lucide="x-circle"></i> No, Wait';
-                cancelBtn.onmousemove = handleHover;
-                cancelBtn.onclick = closeModal;
-                
-                const okBtn = document.createElement('button');
-                okBtn.innerHTML = '<i data-lucide="check-circle"></i> Yes, it is visible';
-                okBtn.onmousemove = handleHover;
-                okBtn.onclick = () => { closeModal(); startPolling(); };
-                
-                btnContainer.appendChild(cancelBtn);
-                btnContainer.appendChild(okBtn);
-            } else {
-                const okBtn = document.createElement('button');
-                okBtn.innerText = 'OK';
-                okBtn.onmousemove = handleHover;
-                okBtn.onclick = closeModal;
-                btnContainer.appendChild(okBtn);
-            }
+        function showPopup(type, title, msg, isConfirm = false) {
+            const content = document.getElementById('modal-content');
+            content.className = `modal-card ${type}`;
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-msg').innerHTML = msg;
+            const btnContainer = document.getElementById('modal-btns');
+            btnContainer.innerHTML = '';
 
-            modal.style.display = 'flex';
-            setTimeout(() => {
-                modal.classList.add('active');
-                lucide.createIcons();
-            }, 10);
-        }
+            if(isConfirm) {
+                const cancelBtn = document.createElement('button');
+                cancelBtn.className = 'hollow';
+                cancelBtn.innerHTML = '<i data-lucide="x-circle"></i> No, Wait';
+                cancelBtn.onmousemove = handleHover;
+                cancelBtn.onclick = closeModal;
+                
+                const okBtn = document.createElement('button');
+                okBtn.innerHTML = '<i data-lucide="check-circle"></i> Yes, it is visible';
+                okBtn.onmousemove = handleHover;
+                okBtn.onclick = () => { closeModal(); startPolling(); };
+                
+                btnContainer.appendChild(cancelBtn);
+                btnContainer.appendChild(okBtn);
+            } else {
+                const okBtn = document.createElement('button');
+                okBtn.innerText = 'OK';
+                okBtn.onmousemove = handleHover;
+                okBtn.onclick = closeModal;
+                btnContainer.appendChild(okBtn);
+            }
 
-        function triggerConfirm() {
-            const user = document.getElementById('rbx-user').value;
-            if(!user) return showPopup('info', 'Wait!', 'Please enter your username first.');
-            showPopup('warning', 'Are you sure your inventory is visible?', '<b>You will not get premium</b> unless it is set to everyone before purchase.', true);
-        }
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.classList.add('active');
+                lucide.createIcons();
+            }, 10);
+        }
 
-        lucide.createIcons();
-    </script>
+        function triggerConfirm() {
+            const user = document.getElementById('rbx-user').value;
+            if(!user) return showPopup('info', 'Wait!', 'Please enter your username first.');
+            showPopup('warning', 'Are you sure your inventory is visible?', '<b>You will not get premium</b> unless it is set to everyone before purchase.', true);
+        }
+
+        lucide.createIcons();
+    </script>
 </body>
 </html>
-
