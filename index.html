@@ -114,6 +114,30 @@
             animation: slideUp 0.6s ease-out;
         }
 
+
+        .container .card:nth-child(2) {
+            border: 2px solid #6236ff;
+            box-shadow: 0 25px 50px -12px rgba(98, 54, 255, 0.15);
+        }
+
+
+        .container .card:nth-child(3) {
+            border: 2px solid transparent;
+            background: linear-gradient(rgba(22, 22, 30, 0.9), rgba(22, 22, 30, 0.9)) padding-box,
+                        linear-gradient(var(--angle), #6236ff, #b58cff, #ffffff, #6236ff) border-box;
+            animation: slideUp 0.6s ease-out, rotateGradient 4s linear infinite;
+        }
+
+        @property --angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+
+        @keyframes rotateGradient {
+            to { --angle: 360deg; }
+        }
+
         .card h1 {
             font-size: 28px;
             margin-top: 0;
