@@ -52,23 +52,26 @@
             transform: scale(1.1) rotate(5deg);
         }
 
+        /* UPDATED: Global Gradient Title Style */
+        .main-title, 
+        .card h1, 
+        .modal-card h2, 
+        .gradient-title {
+            background: linear-gradient(135deg, #ffffff 0%, #b58cff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline-block;
+        }
+
         .main-title {
             font-size: 48px;
             font-weight: 800;
             letter-spacing: -1.5px;
             margin: 0;
             z-index: 1;
-            background: linear-gradient(135deg, #ffffff 0%, #b58cff 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
             text-align: center;
-        }
-
-        .gradient-title {
-            background: linear-gradient(135deg, #ffffff 0%, #b58cff 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: inline-block;
+            width: 100%;
         }
 
         #auth-gate, #plans-container, #username-gate, #processing-gate, #failed-gate, #success-gate {
@@ -103,6 +106,12 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
             text-align: center;
+        }
+
+        .card h1 {
+            font-size: 28px;
+            margin-top: 0;
+            margin-bottom: 20px;
         }
 
         .perks-list {
@@ -265,10 +274,8 @@
         .modal-card h2 {
             margin-top: 0;
             font-size: 24px;
-            color: #ff4b4b;
+            /* Color removed here so global gradient takes over */
         }
-
-        .modal-card.info h2 { color: #ffffff; }
 
         .modal-card p {
             color: #d1c4ff;
@@ -287,7 +294,7 @@
         <h1 class="main-title" style="margin-bottom: 40px;">Verification Required</h1>
         <div class="card" style="height: auto; min-height: unset; width: 400px;">
             <div>
-                <h1 style="margin-top:0">Verify Identity</h1>
+                <h1>Verify Identity</h1>
                 <p style="color:#d1c4ff; margin-bottom:20px">You must verify your Discord account to access the Premium Plan selection.</p>
             </div>
             <button onmousemove="handleHover(event)" onclick="window.location.href='https://katt-username-handler.kattdevelopment.workers.dev/login'">
@@ -344,7 +351,7 @@
     <div id="username-gate">
         <h1 class="main-title" style="margin-bottom: 40px;">Final Step</h1>
         <div class="card" style="height: auto; min-height: unset; width: 440px; padding: 40px;">
-            <h1 class="gradient-title">Roblox Username</h1>
+            <h1>Roblox Username</h1>
             <input type="text" id="rbx-user" class="roblox-input" placeholder="Enter Username...">
             <img src="https://i.imgur.com/bumhtxU.png" class="instr-img">
             <p class="info-text">
@@ -364,7 +371,7 @@
     <div id="processing-gate">
         <div class="card" style="height: auto; min-height: 300px; width: 400px; justify-content: center;">
             <i data-lucide="loader-2" class="spin" style="width: 50px; height: 50px; color: #6236ff; margin: 0 auto 20px;"></i>
-            <h1 class="gradient-title">Processing Purchase...</h1>
+            <h1>Processing Purchase...</h1>
             <p style="color: #d1c4ff;">Checking your inventory for the gamepass. Do not close this page.</p>
         </div>
     </div>
@@ -372,7 +379,7 @@
     <div id="failed-gate">
         <div class="card" style="height: auto; min-height: 300px; width: 400px; justify-content: center;">
             <i data-lucide="x-circle" style="width: 50px; height: 50px; color: #ff4b4b; margin: 0 auto 20px;"></i>
-            <h1 style="color: #ff4b4b;">Process Failed :(</h1>
+            <h1 style="background: none; -webkit-text-fill-color: #ff4b4b; color: #ff4b4b;">Process Failed :(</h1>
             <p style="color: #d1c4ff; margin-bottom: 30px;">We couldn't find the gamepass in your inventory. Make sure it's public!</p>
             <button onmousemove="handleHover(event)" onclick="startPolling()">
                 <i data-lucide="refresh-cw"></i> Restart
@@ -383,7 +390,7 @@
     <div id="success-gate">
         <div class="card" style="height: auto; min-height: 300px; width: 450px; justify-content: center;">
             <i data-lucide="check-circle" style="width: 50px; height: 50px; color: #00ffa3; margin: 0 auto 20px;"></i>
-            <h1 class="gradient-title">Purchase Complete!</h1>
+            <h1>Purchase Complete!</h1>
             <p id="success-message" style="color: #d1c4ff; line-height: 1.6;"></p>
         </div>
     </div>
