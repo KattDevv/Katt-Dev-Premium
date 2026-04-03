@@ -52,7 +52,6 @@
             transform: scale(1.1) rotate(5deg);
         }
 
-        /* UPDATED: Global Gradient Title Style */
         .main-title, 
         .card h1, 
         .modal-card h2, 
@@ -240,7 +239,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Modal Styles */
         #custom-modal {
             display: none;
             position: fixed;
@@ -274,7 +272,6 @@
         .modal-card h2 {
             margin-top: 0;
             font-size: 24px;
-            /* Color removed here so global gradient takes over */
         }
 
         .modal-card p {
@@ -282,6 +279,18 @@
             font-size: 16px;
             margin: 20px 0 30px 0;
             line-height: 1.5;
+        }
+
+        /* --- ADDED BLOCKED STYLES --- */
+        .modal-card a {
+            transition: opacity 0.2s ease;
+        }
+        .modal-card a:hover {
+            opacity: 0.8;
+            text-decoration: underline !important;
+        }
+        #modal-btns button {
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -315,7 +324,7 @@
                         <li class="perk-item">Double Giveaway Joins</li>
                     </ul>
                 </div>
-                <button onmousemove="handleHover(event)" style="margin-top:28px" onclick="initiatePurchase('Premium Basic', '1779373176')">Purchase</button>
+                <button onmousemove="handleHover(event)" style="margin-top:28px" onclick="initiatePurchase('Premium Basic', '1779373176')">Purchase (35R$)</button>
             </div>
 
             <div class="card">
@@ -328,7 +337,7 @@
                         <li class="perk-item">Triple Giveaway Joins</li>
                     </ul>
                 </div>
-                <button onmousemove="handleHover(event)" style="margin-top:28px" onclick="initiatePurchase('Premium Plus', '1703134351')">Purchase</button>
+                <button onmousemove="handleHover(event)" style="margin-top:28px" onclick="initiatePurchase('Premium Plus', '1703134351')">Purchase (65R$)</button>
             </div>
 
             <div class="card">
@@ -343,7 +352,7 @@
                         <li class="perk-item">Lifetime Hub Key</li>
                     </ul>
                 </div>
-                <button onmousemove="handleHover(event)" style="margin-top:28px" onclick="initiatePurchase('Premium Ultimate', '1779133176')">Purchase</button>
+                <button onmousemove="handleHover(event)" style="margin-top:28px" onclick="initiatePurchase('Premium Ultimate', '1779133176')">Purchase (100R$)</button>
             </div>
         </div>
     </div>
@@ -448,6 +457,22 @@
                 try {
                     const response = await fetch(`https://katt-username-handler.kattdevelopment.workers.dev/check-purchase?username=${rbxUser}&passId=${selectedPassId}&discordName=${discordUser}&rank=${selectedRank}`);
                     const data = await response.json();
+
+
+                    if (data.blocked) {
+                        clearInterval(pollTimer);
+                        showView('plans-container');
+                        showPopup(
+                            'warning', 
+                            'Purchase Blocked', 
+                            `This account has been detected to be owned by someone else.<br><br>
+                            <span style="font-size: 12px; color: #a1a1aa;">
+                                Think we made a mistake? <a href="https://discord.gg/9uRWRnmNyF" target="_blank" style="color: #b58cff; text-decoration: none; font-weight: bold;">Create a ticket</a> in the discord server (discord.gg/9uRWRnmNyF)
+                            </span>`, 
+                            false
+                        );
+                        return;
+                    }
 
                     if (data.owned) {
                         clearInterval(pollTimer);
